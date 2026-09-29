@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Imposter Ink</title>
+
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+
+    <main class="home">
+
+        <section class="hero">
+
+            <div class="logo-mark">✦</div>
+
+            <h1>Imposter <span>Ink</span></h1>
+
+            <p class="tagline">
+                Draw the clue. Find the imposter.
+            </p>
+
+            <button class="home-rules-btn" id="homeRulesBtn" type="button">📜 READ RULES BEFORE PLAYING</button>
+
+            <div class="menu">
+
+                <button class="primary-btn" id="createBtn">
+                    <span>＋</span>
+                    Create Room
+                </button>
+
+                <div class="divider">
+                    <span>OR</span>
+                </div>
+
+                <div class="join-box">
+
+                    <input
+                        type="text"
+                        id="roomCode"
+                        placeholder="ENTER ROOM CODE"
+                        maxlength="6"
+                        autocomplete="off"
+                    >
+
+                    <button class="secondary-btn" id="joinBtn">
+                        Join Room
+                    </button>
+
+                </div>
+
+                <p id="errorMessage" class="error"></p>
+
+            </div>
+
+            <div class="game-info">
+
+                <div>
+                    <strong>3–8</strong>
+                    <span>Players</span>
+                </div>
+
+                <div>
+                    <strong>30s</strong>
+                    <span>Drawing</span>
+                </div>
+
+                <div>
+                    <strong>😈</strong>
+                    <span>Imposters</span>
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- RULES -->
+    <div class="home-rules-modal" id="homeRulesModal">
+        <div class="home-rules-backdrop" id="homeRulesBackdrop"></div>
+        <div class="home-rules-card">
+            <button class="home-rules-close" id="homeRulesClose" type="button" aria-label="Close rules">×</button>
+            <span class="modal-label">READ BEFORE PLAYING</span>
+            <h2>Imposter Ink Rules</h2>
+            <p class="rules-intro">Know the rules before you create or join a room.</p>
+            <div class="home-rules-list">
+                <div class="rule-item"><span class="rule-num">1</span><div><b>Get your secret</b><p>Players see the secret word. The imposter only gets a clue.</p></div></div>
+                <div class="rule-item"><span class="rule-num">2</span><div><b>Draw — don’t write</b><p>Draw the word without writing letters, numbers, initials, or spelling it.</p></div></div>
+                <div class="rule-item"><span class="rule-num">3</span><div><b>Use chat carefully</b><p>Talk about the drawings, but never reveal the secret word directly.</p></div></div>
+                <div class="rule-item"><span class="rule-num">4</span><div><b>Imposter’s chance</b><p>The imposter can guess the word. A correct guess wins immediately.</p></div></div>
+                <div class="rule-item"><span class="rule-num">5</span><div><b>Discuss & vote</b><p>After everyone draws, discuss who seems suspicious and vote.</p></div></div>
+                <div class="rule-item"><span class="rule-num">6</span><div><b>Skip when unsure</b><p>If most players skip, voting ends and the same word continues.</p></div></div>
+                <div class="rule-item"><span class="rule-num">7</span><div><b>Catch the imposters</b><p>With two imposters, catching one removes only that imposter. The match continues with a new word.</p></div></div>
+                <div class="rule-item"><span class="rule-num">8</span><div><b>Win the match</b><p>Players win by catching all imposters. Imposters win by surviving or guessing the word.</p></div></div>
+            </div>
+            <label class="rules-check"><input id="rulesReadCheck" type="checkbox"> <span>I have read the rules and understand how to play.</span></label>
+            <button class="modal-action" id="rulesContinueBtn" type="button" disabled>CONTINUE</button>
+        </div>
+    </div>
+
+    <!-- NAME MODAL -->
+
+    <div class="modal-overlay" id="nameModal">
+
+        <div class="name-modal">
+
+            <button class="modal-close" id="closeModal">
+                ×
+            </button>
+
+            <div class="modal-icon">
+                ✦
+            </div>
+
+            <p class="modal-label" id="modalLabel">
+                CREATE ROOM
+            </p>
+
+            <h2>
+                What's your name?
+            </h2>
+
+            <p class="modal-description">
+                Choose a name your friends will see in the game.
+            </p>
+
+            <input
+                type="text"
+                id="playerName"
+                class="name-input"
+                placeholder="Enter player name"
+                maxlength="18"
+                autocomplete="off"
+            >
+
+            <p id="modalError" class="modal-error"></p>
+
+            <button
+                id="confirmName"
+                class="modal-action"
+            >
+                Continue
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/home.js"></script>
+
+</body>
+</html>

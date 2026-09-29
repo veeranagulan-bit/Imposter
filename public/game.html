@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Game | Imposter Ink</title>
+
+    <link
+        rel="stylesheet"
+        href="/css/game.css"
+    >
+</head>
+
+<body>
+
+<main class="game-page">
+
+    <!-- HEADER -->
+
+    <header class="game-header">
+
+        <div class="brand">
+            <div class="brand-icon">✦</div>
+
+            <span>
+                Imposter <b>Ink</b>
+            </span>
+        </div>
+
+        <div class="header-actions"><button id="backBtn" class="back-btn" type="button">← BACK</button><button id="rulesBtn" class="rules-btn" type="button">RULES</button></div>
+
+        <div class="header-stats">
+            <div class="score-display">
+                <span>SCORE</span>
+                <strong id="scoreNumber">0</strong>
+            </div>
+
+            <div class="round-display">
+                <span>ROUND</span>
+                <strong id="roundNumber">1</strong>
+            </div>
+        </div>
+
+    </header>
+
+
+    <!-- ========================= -->
+    <!-- ROLE SCREEN -->
+    <!-- ========================= -->
+
+    <section
+        id="roleScreen"
+        class="role-screen"
+    >
+
+        <div
+            id="playerRole"
+            class="role-card"
+        >
+
+            <div
+                id="roleIcon"
+                class="role-icon"
+            >
+                ✦
+            </div>
+
+            <p
+                id="roleLabel"
+                class="role-label"
+            >
+                YOUR SECRET WORD
+            </p>
+
+            <h1 id="secretInfo">
+                Loading...
+            </h1>
+
+            <p
+                id="roleDescription"
+                class="role-description"
+            >
+                Keep this information secret.
+            </p>
+
+        </div>
+
+
+        <button
+            id="readyBtn"
+            class="ready-btn"
+        >
+            I'M READY
+        </button>
+
+
+        <div
+            id="readyStatus"
+            class="ready-status"
+        >
+            Waiting for players...
+        </div>
+
+    </section>
+
+
+    <!-- ========================= -->
+    <!-- DRAWING SCREEN -->
+    <!-- ========================= -->
+
+    <section
+        id="drawingScreen"
+        class="drawing-screen hidden"
+    >
+
+        <!-- TOP INFO -->
+
+        <div class="drawing-top">
+
+            <div>
+
+                <p class="phase-label">
+                    CURRENT TURN
+                </p>
+
+                <h2 id="turnPlayer">
+                    Player
+                </h2>
+
+            </div>
+
+
+            <div class="timer-box">
+
+                <span id="timer">
+                    30
+                </span>
+
+                <small>
+                    SEC
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <!-- TURN STATUS -->
+
+        <div
+            id="turnStatus"
+            class="turn-status"
+        >
+            Waiting...
+        </div>
+
+        <div class="drawing-rules-banner">
+            ✏️ <strong>Drawing rule:</strong> Don’t write the secret word, letters, numbers, or spell it out on the canvas.
+        </div>
+
+        <!-- CANVAS -->
+
+        <div class="canvas-container">
+
+            <canvas
+                id="drawingCanvas"
+            ></canvas>
+
+        </div>
+
+
+        <!-- DRAWING TOOLS -->
+
+        <div
+            id="drawingTools"
+            class="drawing-tools"
+        >
+
+            <div class="tool-group">
+
+                <label>
+                    SIZE
+                </label>
+
+                <input
+                    id="brushSize"
+                    type="range"
+                    min="2"
+                    max="25"
+                    value="5"
+                >
+
+            </div>
+
+
+            <div class="tool-group">
+
+                <label>
+                    COLOR
+                </label>
+
+                <input
+                    id="brushColor"
+                    type="color"
+                    value="#111111"
+                >
+
+            </div>
+
+
+            <button
+                id="clearCanvas"
+                class="tool-btn"
+            >
+                CLEAR
+            </button>
+
+        </div>
+
+        <div class="drawing-side-panels">
+            <div id="guessPanel" class="guess-panel hidden">
+                <div>
+                    <span class="panel-label">IMPOSTER ONLY</span>
+                    <h3>Think you know the word?</h3>
+                    <p>Guess it correctly and end the game instantly.</p>
+                </div>
+                <div class="guess-row">
+                    <input id="guessInput" maxlength="50" autocomplete="off" placeholder="Enter your guess...">
+                    <button id="guessBtn" type="button">GUESS</button>
+                </div>
+                <small id="guessFeedback"></small>
+            </div>
+
+            <div class="chat-panel">
+                <div class="chat-header">
+                    <div>
+                        <span class="panel-label">ROOM CHAT</span>
+                        <h3>Talk to the table</h3>
+                    </div>
+                    <span class="chat-limit">160</span>
+                </div>
+                <div id="chatMessages" class="chat-messages" aria-live="polite"></div>
+                <form id="chatForm" class="chat-form">
+                    <input id="chatInput" maxlength="160" autocomplete="off" placeholder="Send a message...">
+                    <button type="submit">SEND</button>
+                </form>
+            </div>
+        </div>
+
+    </section>
+
+
+    <!-- ========================= -->
+    <!-- VOTING SCREEN -->
+    <!-- ========================= -->
+
+    <section
+        id="votingScreen"
+        class="voting-screen hidden"
+    >
+
+        <div class="voting-heading">
+            <p class="phase-label">THE DRAWING IS COMPLETE</p>
+            <h1>Who is the imposter?</h1>
+            <p>Choose one player. Your vote is final.</p>
+        </div>
+
+        <div class="voting-layout">
+            <div class="voting-main">
+                <div id="votingGuessPanel" class="guess-panel voting-guess-panel hidden">
+                    <div>
+                        <span class="panel-label">IMPOSTER ONLY</span>
+                        <h3>Still think you know the word?</h3>
+                        <p>You can gamble during voting too. A correct guess ends the game instantly.</p>
+                    </div>
+                    <div class="guess-row">
+                        <input id="votingGuessInput" maxlength="50" autocomplete="off" placeholder="Guess the secret word...">
+                        <button id="votingGuessBtn" type="button">GUESS</button>
+                    </div>
+                    <small id="votingGuessFeedback"></small>
+                </div>
+                <div id="voteStatus" class="vote-status">Waiting for votes...</div>
+                <div id="playersGrid" class="players-grid"></div>
+                <button id="submitVoteBtn" class="submit-vote-btn" disabled>
+                    VOTE FOR THIS PLAYER
+                </button>
+                <button id="nextRoundBtn" class="next-round-btn" type="button">
+                    SKIP VOTE
+                </button>
+                <p id="nextRoundStatus" class="next-round-status">Skip the vote. If everyone skips, the round continues with the same word.</p>
+            </div>
+
+            <div class="chat-panel vote-chat-panel">
+                <div class="chat-header">
+                    <div>
+                        <span class="panel-label">ROOM CHAT</span>
+                        <h3>Discuss before you vote</h3>
+                    </div>
+                    <span class="chat-limit">160</span>
+                </div>
+                <div id="voteChatMessages" class="chat-messages" aria-live="polite"></div>
+                <form id="voteChatForm" class="chat-form">
+                    <input id="voteChatInput" maxlength="160" autocomplete="off" placeholder="Talk, accuse, defend...">
+                    <button type="submit">SEND</button>
+                </form>
+            </div>
+        </div>
+
+    </section>
+
+
+    <!-- ========================= -->
+    <!-- RESULTS SCREEN -->
+    <!-- ========================= -->
+
+    <section
+        id="resultsScreen"
+        class="results-screen hidden"
+    >
+
+        <div class="results-card">
+            <div id="resultsIcon" class="results-icon">✦</div>
+            <p class="phase-label">VOTING RESULTS</p>
+            <h1 id="resultsTitle">The votes are in</h1>
+            <p id="resultsMessage" class="results-message"></p>
+
+            <div id="resultsPlayers" class="results-players"></div>
+
+            <div class="results-actions">
+                <button id="playAgainBtn" class="result-btn primary">PLAY AGAIN</button>
+                <button id="homeBtn" class="result-btn secondary">RETURN HOME</button>
+            </div>
+        </div>
+
+    </section>
+
+</main>
+
+<div id="leaveModal" class="confirm-modal hidden" role="dialog" aria-modal="true" aria-labelledby="leaveTitle">
+    <div class="confirm-backdrop" id="leaveBackdrop"></div>
+    <div class="confirm-card">
+        <span class="panel-label">LEAVE GAME</span>
+        <h2 id="leaveTitle">Leave this room?</h2>
+        <p>You will leave the current game and your friends will see that you left.</p>
+        <div class="confirm-actions">
+            <button id="cancelLeaveBtn" class="result-btn secondary" type="button">STAY</button>
+            <button id="confirmLeaveBtn" class="result-btn danger-btn" type="button">LEAVE</button>
+        </div>
+    </div>
+</div>
+
+<div id="rulesModal" class="rules-modal hidden" role="dialog" aria-modal="true" aria-labelledby="rulesTitle">
+    <div class="rules-backdrop" id="rulesBackdrop"></div>
+    <div class="rules-card">
+        <button id="closeRulesBtn" class="close-rules" type="button" aria-label="Close rules">×</button>
+        <span class="panel-label">HOW TO PLAY</span>
+        <h2 id="rulesTitle">Imposter Ink Rules</h2>
+        <div class="rules-list">
+            <div class="rule-item"><span class="rule-num">1</span><div><b>Get your secret</b><p>Players see the secret word. The imposter gets only a clue.</p></div></div>
+            <div class="rule-item"><span class="rule-num">2</span><div><b>Draw — don’t write</b><p>Show the idea with drawings. Never write letters, numbers, initials, or spell the word.</p></div></div>
+            <div class="rule-item"><span class="rule-num">3</span><div><b>Chat without spoilers</b><p>Discuss the drawings, but do not type or directly reveal the secret word.</p></div></div>
+            <div class="rule-item"><span class="rule-num">4</span><div><b>Imposter can guess</b><p>The imposter may guess the word during the round. A correct guess ends the match immediately.</p></div></div>
+            <div class="rule-item"><span class="rule-num">5</span><div><b>Vote after drawing</b><p>Discuss the evidence and vote for the player you think is an imposter. You cannot vote for yourself.</p></div></div>
+            <div class="rule-item"><span class="rule-num">6</span><div><b>Skip if unsure</b><p>If most players choose SKIP VOTE, the vote is skipped and the same word continues.</p></div></div>
+            <div class="rule-item"><span class="rule-num">7</span><div><b>Two imposters</b><p>If there are two, catching one removes only that imposter. The remaining imposter stays in the match and a new word starts.</p></div></div>
+            <div class="rule-item"><span class="rule-num">8</span><div><b>How to win</b><p>Players win by catching every imposter. Imposters win by surviving or correctly guessing the word.</p></div></div>
+        </div>        </div>
+    </div>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+
+<script src="/js/game.js?v=12"></script>
+
+</body>
+
+</html>

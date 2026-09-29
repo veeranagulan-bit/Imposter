@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Lobby | Imposter Ink</title>
+
+    <link rel="stylesheet" href="/css/lobby.css">
+</head>
+
+<body>
+
+    <main class="lobby-page">
+
+        <header class="lobby-header">
+
+            <div class="brand">
+                <div class="brand-icon">✦</div>
+                <span>Imposter <b>Ink</b></span>
+            </div>
+
+            <div class="lobby-header-actions">
+                <button id="backHomeBtn" class="back-btn" type="button">← BACK</button>
+            </div>
+
+            <div class="room-display">
+                <span>ROOM CODE</span>
+
+                <strong id="roomCode">
+                    ------
+                </strong>
+
+                <button id="copyBtn">
+                    COPY
+                </button>
+            </div>
+
+        </header>
+
+
+        <section class="lobby-content">
+
+            <div class="lobby-title">
+
+                <p class="eyebrow">
+                    GAME LOBBY
+                </p>
+
+                <h1>
+                    Gather your crew.
+                </h1>
+
+                <p>
+                    You need at least 3 players to start.
+                </p>
+
+            </div>
+
+
+            <div class="players-card">
+
+                <div class="card-header">
+
+                    <div>
+                        <h2>Players</h2>
+
+                        <span id="playerCount">
+                            0 / 8
+                        </span>
+                    </div>
+
+                    <div class="status">
+                        WAITING
+                    </div>
+
+                </div>
+
+
+                <div id="playersList" class="players-list">
+                    <!-- Players added by JavaScript -->
+                </div>
+
+
+                <div class="lobby-actions">
+
+                    <button
+                        id="startBtn"
+                        class="start-btn"
+                        disabled
+                    >
+                        START GAME
+                    </button>
+
+                    <button
+                        id="leaveBtn"
+                        class="leave-btn"
+                    >
+                        LEAVE ROOM
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <div id="lobbyLeaveModal" class="confirm-modal hidden" role="dialog" aria-modal="true" aria-labelledby="lobbyLeaveTitle">
+        <div class="confirm-backdrop" id="lobbyLeaveBackdrop"></div>
+        <div class="confirm-card">
+            <span class="panel-label">LEAVE ROOM</span>
+            <h2 id="lobbyLeaveTitle">Leave this room?</h2>
+            <p>Your friends will see that you left the lobby.</p>
+            <div class="confirm-actions">
+                <button id="cancelLobbyLeave" class="result-btn secondary" type="button">STAY</button>
+                <button id="confirmLobbyLeave" class="result-btn danger-btn" type="button">LEAVE</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast">
+        Room code copied!
+    </div>
+
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/lobby.js?v=2"></script>
+
+</body>
+
+</html>
