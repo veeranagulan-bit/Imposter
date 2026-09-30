@@ -1,135 +1,89 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Lobby | Imposter Ink</title>
-
+    <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/lobby.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
 </head>
-
 <body>
-
     <main class="lobby-page">
-
         <header class="lobby-header">
-
             <div class="brand">
                 <div class="brand-icon">✦</div>
                 <span>Imposter <b>Ink</b></span>
             </div>
-
-            <div class="lobby-header-actions">
-                <button id="backHomeBtn" class="back-btn" type="button">← BACK</button>
-            </div>
-
             <div class="room-display">
                 <span>ROOM CODE</span>
-
-                <strong id="roomCode">
-                    ------
-                </strong>
-
-                <button id="copyBtn">
-                    COPY
-                </button>
+                <strong id="roomCode">------</strong>
+                <button id="copyBtn">COPY</button>
             </div>
-
         </header>
 
-
         <section class="lobby-content">
-
             <div class="lobby-title">
-
-                <p class="eyebrow">
-                    GAME LOBBY
-                </p>
-
-                <h1>
-                    Gather your crew.
-                </h1>
-
-                <p>
-                    You need at least 3 players to start.
-                </p>
-
+                <p class="eyebrow">GAME LOBBY</p>
+                <h1>Gather your crew.</h1>
+                <p>You need at least 3 players to start.</p>
             </div>
 
-
-            <div class="players-card">
-
-                <div class="card-header">
-
-                    <div>
-                        <h2>Players</h2>
-
-                        <span id="playerCount">
-                            0 / 8
-                        </span>
+            <div class="lobby-grid">
+                <!-- Players Card -->
+                <div class="players-card panel">
+                    <div class="card-header">
+                        <h2>Players <span id="playerCount">0 / 8</span></h2>
+                        <div class="status">WAITING</div>
                     </div>
+                    <div id="playersList" class="players-list"></div>
+                </div>
 
-                    <div class="status">
-                        WAITING
+                <!-- Settings Card (Host only) -->
+                <div class="settings-card panel" id="hostSettings" style="display: none;">
+                    <div class="card-header">
+                        <h2>Game Mode</h2>
                     </div>
-
+                    <div class="mode-selector">
+                        <label class="mode-option">
+                            <input type="radio" name="gameMode" value="hidden_image" checked>
+                            <div class="mode-content">
+                                <strong>Hidden Image</strong>
+                                <span>Imposter gets a vague category hint.</span>
+                            </div>
+                        </label>
+                        <label class="mode-option">
+                            <input type="radio" name="gameMode" value="similar_image">
+                            <div class="mode-content">
+                                <strong>Similar Image Trap</strong>
+                                <span>Imposter gets a related, similar image.</span>
+                            </div>
+                        </label>
+                    </div>
+                    
+                    <div class="lobby-actions">
+                        <button id="startBtn" class="primary-btn" disabled>START GAME</button>
+                    </div>
                 </div>
-
-
-                <div id="playersList" class="players-list">
-                    <!-- Players added by JavaScript -->
+                
+                <!-- Non-host view -->
+                <div class="settings-card panel" id="guestSettings">
+                    <div class="card-header">
+                        <h2>Game Mode</h2>
+                    </div>
+                    <div class="guest-mode-display">
+                        Waiting for host to select mode and start...
+                    </div>
                 </div>
-
-
-                <div class="lobby-actions">
-
-                    <button
-                        id="startBtn"
-                        class="start-btn"
-                        disabled
-                    >
-                        START GAME
-                    </button>
-
-                    <button
-                        id="leaveBtn"
-                        class="leave-btn"
-                    >
-                        LEAVE ROOM
-                    </button>
-
-                </div>
-
             </div>
-
         </section>
-
     </main>
 
-
-    <div id="lobbyLeaveModal" class="confirm-modal hidden" role="dialog" aria-modal="true" aria-labelledby="lobbyLeaveTitle">
-        <div class="confirm-backdrop" id="lobbyLeaveBackdrop"></div>
-        <div class="confirm-card">
-            <span class="panel-label">LEAVE ROOM</span>
-            <h2 id="lobbyLeaveTitle">Leave this room?</h2>
-            <p>Your friends will see that you left the lobby.</p>
-            <div class="confirm-actions">
-                <button id="cancelLobbyLeave" class="result-btn secondary" type="button">STAY</button>
-                <button id="confirmLobbyLeave" class="result-btn danger-btn" type="button">LEAVE</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="toast" class="toast">
-        Room code copied!
-    </div>
-
+    <div id="toast" class="toast hidden">Room code copied!</div>
 
     <script src="/socket.io/socket.io.js"></script>
-    <script src="/js/lobby.js?v=2"></script>
-
+    <script src="/js/lobby.js"></script>
 </body>
-
 </html>

@@ -1,302 +1,100 @@
 const socket = io();
 
-const params =
-    new URLSearchParams(
-        window.location.search
-    );
+const roomCodeParams = new URLSearchParams(window.location.search);
+const roomCode = roomCodeParams.get("room");
 
-const roomCode =
-    params.get("room");
+if (!roomCode) window.location.href = "/";
 
+const playerToken = localStorage.getItem("imposterInkPlayerToken");
+const playerName = localStorage.getItem("imposterInkPlayerName");
 
-const playerToken =
-    localStorage.getItem(
-        "imposterInkPlayerToken"
-    );
+if (!playerToken || !playerName) window.location.href = "/";
 
+document.getElementById("roomCode").textContent = roomCode;
 
-const playerName =
-    localStorage.getItem(
-        "imposterInkPlayerName"
-    );
+socket.emit("joinRoom", { roomCode, playerName, playerToken });
 
-
-const roomCodeElement =
-    document.getElementById("roomCode");
-
-const playersList =
-    document.getElementById("playersList");
-
-const playerCount =
-    document.getElementById("playerCount");
-
-const startBtn =
-    document.getElementById("startBtn");
-
-const copyBtn =
-    document.getElementById("copyBtn");
-
-const leaveBtn =
-    document.getElementById("leaveBtn");
-
-const toast =
-    document.getElementById("toast");
-
-const backHomeBtn = document.getElementById("backHomeBtn");
-const lobbyLeaveModal = document.getElementById("lobbyLeaveModal");
-const lobbyLeaveBackdrop = document.getElementById("lobbyLeaveBackdrop");
-const cancelLobbyLeave = document.getElementById("cancelLobbyLeave");
-const confirmLobbyLeave = document.getElementById("confirmLobbyLeave");
-
-
-roomCodeElement.textContent =
-    roomCode || "ERROR";
-
-
-console.log("Lobby room:", roomCode);
-console.log("Player:", playerName);
-
-
-// =============================
-// RECONNECT
-// =============================
-
-socket.emit("reconnectToRoom", {
-
-    roomCode,
-
-    playerToken
-
-});
-
-
-// =============================
-// ROOM UPDATE
-// =============================
-
-socket.on("roomUpdated", (data) => {
-
-    playersList.innerHTML = "";
-
-    playerCount.textContent =
-        `${data.playerCount} / 8`;
-
-
-    let currentPlayerIsHost = false;
-
-
-    data.players.forEach((player) => {
-
-        const playerElement =
-            document.createElement("div");
-
-        playerElement.className =
-            "player";
-
-
-        const avatar =
-            document.createElement("div");
-
-        avatar.className =
-            "player-avatar";
-
-        avatar.textContent =
-            player.name
-                .charAt(0)
-                .toUpperCase();
-
-
-        const name =
-            document.createElement("div");
-
-        name.className =
-            "player-name";
-
-        name.textContent =
-            player.name;
-
-
-        playerElement.appendChild(avatar);
-
-        playerElement.appendChild(name);
-
-
-        if (player.isHost) {
-
-            const badge =
-                document.createElement("div");
-
-            badge.className =
-                "host-badge";
-
-            badge.textContent =
-                "HOST";
-
-            playerElement.appendChild(badge);
-
-
-            if (
-                player.name === playerName
-            ) {
-
-                currentPlayerIsHost = true;
-
-            }
-
-        }
-
-
-        playersList.appendChild(
-            playerElement
-        );
-
-    });
-
-
-    startBtn.disabled =
-        !currentPlayerIsHost ||
-        data.playerCount < 3;
-
-
-    console.log(
-        "Host:",
-        currentPlayerIsHost,
-        "Players:",
-        data.playerCount
-    );
-
-});
-
-
-// =============================
-// START GAME
-// =============================
-
-startBtn.addEventListener("click", () => {
-
-    console.log("START GAME clicked");
-
-    if (startBtn.disabled) {
-
-        console.log(
-            "Start button is disabled"
-        );
-
-        return;
-    }
-
-
-    startBtn.disabled = true;
-
-    startBtn.textContent =
-        "STARTING GAME...";
-
-
-    socket.emit(
-        "startGame",
-        {
-            roomCode
-        }
-    );
-
-});
-
-
-// =============================
-// GAME STARTING
-// =============================
-
-socket.on("gameStarting", () => {
-
-    console.log(
-        "Game starting..."
-    );
-
-
-    window.location.href =
-        `/game.html?room=${roomCode}`;
-
-});
-
-
-// =============================
-// GAME ERROR
-// =============================
-
-socket.on("gameError", (message) => {
-
-    console.error(
-        "GAME ERROR:",
-        message
-    );
-
-
-    startBtn.disabled = false;
-
-    startBtn.textContent =
-        "START GAME";
-
-    showLobbyToast(message, "error");
-
-});
-
-
-// =============================
-// COPY ROOM
-// =============================
-
-copyBtn.addEventListener(
-    "click",
-    async () => {
-
-        if (!roomCode) {
-            return;
-        }
-
-        await navigator.clipboard
-            .writeText(roomCode);
-
-        toast.classList.add("show");
-
-        setTimeout(() => {
-
-            toast.classList.remove("show");
-
-        }, 1800);
-
-    }
-);
-
-
-// =============================
-// LEAVE
-// =============================
-
-function openLobbyLeaveModal() { lobbyLeaveModal?.classList.remove("hidden"); }
-function closeLobbyLeaveModal() { lobbyLeaveModal?.classList.add("hidden"); }
-
-backHomeBtn?.addEventListener("click", openLobbyLeaveModal);
-leaveBtn?.addEventListener("click", openLobbyLeaveModal);
-cancelLobbyLeave?.addEventListener("click", closeLobbyLeaveModal);
-lobbyLeaveBackdrop?.addEventListener("click", closeLobbyLeaveModal);
-confirmLobbyLeave?.addEventListener("click", () => {
-    confirmLobbyLeave.disabled = true;
-    socket.emit("leaveRoom", { roomCode, playerToken });
+socket.on("joinError", (message) => {
+    alert(message);
     window.location.href = "/";
 });
 
-socket.on("playerLeft", (data) => {
-    showLobbyToast(`${data.playerName} left the room.`, "warning");
+const playersList = document.getElementById("playersList");
+const playerCountDisplay = document.getElementById("playerCount");
+const startBtn = document.getElementById("startBtn");
+const hostSettings = document.getElementById("hostSettings");
+const guestSettings = document.getElementById("guestSettings");
+
+let isHost = false;
+
+socket.on("roomUpdated", ({ players, playerCount, gameMode }) => {
+    playersList.innerHTML = "";
+    playerCountDisplay.textContent = `${playerCount} / 8`;
+
+    players.forEach(player => {
+        const div = document.createElement("div");
+        div.className = "player-row";
+        
+        const avatar = document.createElement("div");
+        avatar.className = "player-avatar";
+        avatar.textContent = player.name.charAt(0).toUpperCase();
+        
+        const nameNode = document.createElement("div");
+        nameNode.className = "player-name";
+        nameNode.textContent = player.name;
+        
+        div.appendChild(avatar);
+        div.appendChild(nameNode);
+        
+        if (player.isHost) {
+            const hostBadge = document.createElement("span");
+            hostBadge.className = "host-badge";
+            hostBadge.textContent = "HOST";
+            div.appendChild(hostBadge);
+            
+            if (player.name === playerName) {
+                isHost = true;
+                hostSettings.style.display = "block";
+                guestSettings.style.display = "none";
+                startBtn.disabled = playerCount < 3;
+            }
+        }
+        
+        playersList.appendChild(div);
+    });
+    
+    if (!isHost) {
+        if (gameMode) {
+            guestSettings.querySelector('.guest-mode-display').textContent = `Host selected: ${gameMode === 'similar_image' ? 'Similar Image Trap' : 'Hidden Image'}`;
+        }
+    }
 });
 
-function showLobbyToast(message, type = "info") {
-    toast.textContent = message;
-    toast.dataset.type = type;
-    toast.classList.add("show");
-    clearTimeout(window.__lobbyToastTimer);
-    window.__lobbyToastTimer = setTimeout(() => toast.classList.remove("show"), 2600);
-}
+// Broadcast game mode selection when changed by host
+const modeRadios = document.querySelectorAll('input[name="gameMode"]');
+modeRadios.forEach(radio => {
+    radio.addEventListener('change', () => {
+        if (isHost) {
+            // Can optionally broadcast to others, for now it will just be sent on start
+        }
+    });
+});
 
-document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape") closeLobbyLeaveModal();
+startBtn.addEventListener("click", () => {
+    if (isHost) {
+        const mode = document.querySelector('input[name="gameMode"]:checked').value;
+        socket.emit("startGame", { roomCode, gameMode: mode });
+    }
+});
+
+socket.on("gameStarting", () => {
+    window.location.href = `/game.html?room=${roomCode}`;
+});
+
+document.getElementById("copyBtn").addEventListener("click", () => {
+    navigator.clipboard.writeText(roomCode).then(() => {
+        const toast = document.getElementById("toast");
+        toast.classList.remove("hidden");
+        setTimeout(() => toast.classList.add("hidden"), 3000);
+    });
 });
