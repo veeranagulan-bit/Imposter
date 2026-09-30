@@ -274,3 +274,16 @@ button {
 .rules-check input { width: 20px; height: 20px; accent-color: var(--primary); }
 
 .modal-overlay:not(.active), .home-rules-modal:not(.active) { display: none !important; }
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    .hero h1 { font-size: 3rem; }
+    .logo-mark { font-size: 3rem; }
+    .tagline { font-size: 1.2rem; }
+    .menu { padding: 1.5rem; gap: 1rem; }
+    .join-box { flex-direction: column; }
+    .join-box button { width: 100%; }
+    .game-info { flex-direction: column; gap: 1rem; }
+    .name-modal, .home-rules-card { padding: 1.5rem; }
+    .name-modal h2, .home-rules-card h2 { font-size: 1.8rem; }
+}

@@ -171,3 +171,15 @@
 @media (max-width: 900px) {
     .reveal-layout, .voting-layout { grid-template-columns: 1fr; }
 }
+
+@media (max-width: 600px) {
+    .game-page { padding: 1rem; }
+    .game-header { flex-direction: column; gap: 1rem; padding: 1rem; }
+    .header-stats { width: 100%; justify-content: space-between; }
+    .panel { padding: 1.5rem; }
+    .secret-image-container h2 { font-size: 2rem; }
+    .timer-box span { font-size: 2rem; }
+    .clue-input-row { flex-direction: column; }
+    .clue-input-row button { width: 100%; }
+    .results-players { grid-template-columns: 1fr; }
+}
